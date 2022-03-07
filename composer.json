@@ -1,17 +1,11 @@
 {
-    "description": "CiFireCMS Installer",
-    "name": "cifirecms/installer",
+    "description": "cTiga Installer",
+    "name": "adimancifi/ctiga-installer",
     "type": "library",
     "license": "MIT",
-    "homepage": "https://github.com/CiFireCMS",
+    "homepage": "https://github.com/adimancifi/ctiga-installer",
     "support": {
-        "source": "https://github.com/CiFireCMS/installer"
+        "source": "https://github.com/adimancifi/ctiga-installer"
     },
-    "minimum-stability": "dev",
-    "require": {
-        "codeigniter/framework": "~3.1"
-    },
-    "suggest": {
-        "paragonie/random_compat": "Provides better randomness in PHP 5.x"
-    }
+    "minimum-stability": "dev"
 }
