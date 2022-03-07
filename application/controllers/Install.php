@@ -16,26 +16,27 @@ class Install extends CI_Controller
 		));
 
 		$this->app_path = FCPATH.'app/';
+		$this->installer_path = FCPATH.'vendor/adimancifi/ctiga-installer/';
 	}
 
 
 	public function index()
 	{
-		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		if ( $_SERVER['REQUEST_METHOD'] == 'POST' )
 		{
 			// start
-			if ($this->input->post('act') === 'start') 
+			if ( $this->input->post('act') === 'start' ) 
 			{
 				$this->_view('form1');
 			}
 
 			// Step 1
-			if ($this->input->post('act') === 'step1')
+			if ( $this->input->post('act') === 'step1' )
 			{
 				$dbconfig = $this->_dbconfig($this->input->post());
 				$db_obj = $this->load->database($dbconfig, true);
 				
-				if (! $db_obj->conn_id)
+				if ( ! $db_obj->conn_id )
 				{
 					show_error('Unable to connect to your database server using the provided settings.', 500, 'A Database Error Occurred');
 				}
@@ -45,7 +46,7 @@ class Install extends CI_Controller
 				}
 
 				// import database.sql.
-				if ($this->install_model->import_tables(FCPATH."vendor/cifirecms/installer/sql/database.sql") == true)
+				if ( $this->install_model->import_tables($this->installer_path."sql/database.sql") == true )
 				{
 					$this->_view('form2');
 				}
@@ -58,12 +59,12 @@ class Install extends CI_Controller
 			}
 
 			// Step 2
-			if ($this->input->post('act') === 'step2')
+			if ( $this->input->post('act') === 'step2' )
 			{
 				$dbconfig = $this->_dbconfig($this->input->post());
 				$db_obj = $this->load->database($dbconfig, true);
 				
-				if (! $db_obj->conn_id)
+				if ( ! $db_obj->conn_id )
 				{
 					return show_error('Unable to connect to your database server using the provided settings.', 500, 'A Database Error Occurred');
 				}
@@ -82,9 +83,9 @@ class Install extends CI_Controller
 				// Insert User
 				$this->install_model->insert_user(array(
 					'id'        => 1,
-					'username'  => $this->input->post('adm_user'),
+					'username'  => trim($this->input->post('adm_user')),
 					'password'  => $encrypted_password,
-					'email'     => $this->input->post('adm_email'),
+					'email'     => trim($this->input->post('adm_email')),
 					'name'      => 'Super Admin',
 					'key_group' => 'root',
 					'tlpn'      => '08123456789',
@@ -102,49 +103,49 @@ class Install extends CI_Controller
 				$this->install_model->insert_setting(array(
 					'groups'  => 'general',
 					'options' => 'web_name',
-					'value'   => $this->input->post('site_name'),
+					'value'   => trim($this->input->post('site_name')),
 					'type'    => 'text',
 					'content' => ''
 				));
 				$this->install_model->insert_setting(array(
 					'groups'  => 'general',
 					'options' => 'web_url',
-					'value'   => $this->input->post('site_url'),
+					'value'   => trim($this->input->post('site_url')),
 					'type'    => 'text',
 					'content' => ''
 				));
 				$this->install_model->insert_setting(array(
 					'groups'  => 'general',
 					'options' => 'web_slogan',
-					'value'   => $this->input->post('site_slogan'),
+					'value'   => trim($this->input->post('site_slogan')),
 					'type'    => 'otehr',
 					'content' => ''
 				));
 				$this->install_model->insert_setting(array(
 					'groups'  => 'general',
 					'options' => 'web_description',
-					'value'   => $this->input->post('site_desc'),
+					'value'   => trim($this->input->post('site_desc')),
 					'type'    => 'other',
 					'content' => ''
 				));
 				$this->install_model->insert_setting(array(
 					'groups'  => 'general',
 					'options' => 'web_keyword',
-					'value'   => 'CifireCMS, CMS Codeigniter, CMS Indonesia, CMS Open Source',
+					'value'   => 'AdimanCifi, Codeigniter, CMS Indonesia, CMS Open Source',
 					'type'    => 'text',
 					'content' => ''
 				));
 				$this->install_model->insert_setting(array(
 					'groups'  => 'general',
 					'options' => 'web_author',
-					'value'   => 'CiFireCMS',
+					'value'   => 'AdimanCifi',
 					'type'    => 'text',
 					'content' => ''
 				));
 				$this->install_model->insert_setting(array(
 					'groups'  => 'general',
 					'options' => 'web_email',
-					'value'   => $this->input->post('site_email'),
+					'value'   => trim($this->input->post('site_email')),
 					'type'    => 'text',
 					'content' => ''
 				));
@@ -279,7 +280,7 @@ class Install extends CI_Controller
 				$this->install_model->insert_setting(array(
 					'groups'  => 'config',
 					'options' => 'page_item',
-					'value'   => '5',
+					'value'   => '8',
 					'type'    => 'text',
 					'content' => ''
 				));
@@ -345,7 +346,7 @@ class Install extends CI_Controller
 				$this->install_model->insert_setting(array(
 					'groups'  => 'other',
 					'options' => 'google_analytics',
-					'value'   => 'your google analytics code',
+					'value'   => '-- your google analytics code --',
 					'type'    => 'text',
 					'content' => ''
 				));
@@ -358,14 +359,13 @@ class Install extends CI_Controller
 				));
 				
 				
-				if (! $this->db->trans_status())
+				if ( ! $this->db->trans_status() )
 				{
 					$this->db->trans_rollback();
 				}
 				else
 				{
 					$this->db->trans_commit();
-
 
 					$this->_create_file_dbconfig(array(
 						'db_port' => $_POST['db_port'],

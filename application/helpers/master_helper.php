@@ -741,7 +741,7 @@ function license()
     $license = '
 MIT License
 
-Copyright (c) 2019 - '.date("Y").' CiFireCMS
+Copyright (c) 2022 - '.date("Y").' CTIGA
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
